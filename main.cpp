@@ -1,15 +1,12 @@
-﻿#include <iostream>
+#include <iostream>
 #include <cmath>
 using namespace std;
-
-#define PI 3.14159265
 
 // Оголошення функцій
 void task_geom28(); // Завдання 2: Перевірка, чи точка потрапляє в червону фігуру
 bool isValidDouble(double x); // Для перевірки коректності введення числа
 
 void task_9(); // Завдання 9: Обчислення виразу для заданих x і n
-bool validateX(double x); // Перевірка коректності x (1 <= x <= 5)
 bool validateN(int n); // Перевірка коректності n (натуральне число)
 
 void task_30(); // Завдання 30: Дослідження ряду на збіжність
@@ -117,7 +114,7 @@ void task_9() {
     cout << "Enter a natural number n: ";
     while (true) {
         cin >> n;
-        if (cin.fail() || !validateN(n)) {
+        if (cin.fail() || n <= 0) {  // n має дійсним типом
             cin.clear();
             cin.ignore(32767, '\n');
             cout << "Invalid value for n. It must be a natural number. Try again: ";
@@ -131,7 +128,7 @@ void task_9() {
     cout << "Enter a real number x (1 <= x <= 5): ";
     while (true) {
         cin >> x;
-        if (cin.fail() || !validateX(x)) {
+        if (cin.fail() || x < 0 || x > 5) {  // x має бути в межах [1, 5] 
             cin.clear();
             cin.ignore(32767, '\n');
             cout << "Invalid value for x. It must satisfy 1 <= x <= 5. Try again: ";
@@ -147,8 +144,8 @@ void task_9() {
         double term = (pow(x, 1.0 / k) * k * pow(-1, k)) / pow(x, k - 1);
         sum += term;
 
-        // Виведення кожного третього чи четвертого елемента в залежності від парності n
-        if ((n % 2 == 0 && k % 3 == 0) || (n % 2 != 0 && k % 4 == 0)) {
+        // Виведення кожного четвертого елемента
+        if (k % 4 == 0) {
             cout << "Element at k = " << k << ": " << term << endl;
         }
     }
@@ -158,11 +155,21 @@ void task_9() {
 }
 
 // Завдання 30: Дослідження ряду на збіжність
+
+// Функція для обчислення факторіалу
+ double factorial(int n) {
+    if (n <= 1) return 1;
+    double res = 1;
+    for (int i = 1; i <= n; i++) {
+        res *= i;
+    }
+    return res;
+}
+
 void task_30() {
-    double x, u, sum = 0, e = 1E-20; // Точність для завершення
+    double x, u, sum = 0, e = 1E-5; 
     int n = 1;
 
-    cout << "Task: Calculate the sum of the series\n";
     cout << "Enter the value of x (real number): ";
     while (true) {
         cin >> x;
@@ -178,6 +185,10 @@ void task_30() {
 
     // Обчислення першого елемента ряду
     u = (pow(x, n) * factorial(n)) / pow(n, n / 2.0);
+    if (isinf(u)) {
+        cout << "First element calculation resulted in overflow.\n";
+            return;
+    }
     sum = u;
 
     cout << "First element of the series: u = " << u << endl;
@@ -186,6 +197,11 @@ void task_30() {
     while (fabs(u) > e) {
         n++;
         u = (pow(x, n) * factorial(n)) / pow(n, n / 2.0); // Обчислення кожного елемента ряду
+
+        if (isinf(u)) {
+            cout << "Overflow detected at element n = " << n << ". Stop calculate\n";
+            break;
+        }
         sum += u;
 
         cout << "Current element: u = " << u << endl;
@@ -199,23 +215,4 @@ void task_30() {
 
     // Виведення результату
     cout << "Total sum: " << sum << endl;
-}
-
-// Функція для обчислення факторіалу
-double factorial(int n) {
-    double res = 1;
-    for (int i = 1; i <= n; i++) {
-        res *= i;
-    }
-    return res;
-}
-
-// Перевірка коректності x
-bool validateX(double x) {
-    return x >= 1 && x <= 5; // x має бути в межах [1, 5]
-}
-
-// Перевірка коректності n
-bool validateN(int n) {
-    return n > 0; // n має бути натуральним числом
 }

@@ -99,11 +99,6 @@ void task_geom28() {
     }
 }
 
-// Функція для перевірки дійсного числа
-bool isValidDouble(double x) {
-    return !cin.fail(); // Перевірка на коректність введеного числа
-}
-
 // Завдання 9: Обчислення виразу для заданих x і n
 void task_9() {
     double x, sum = 0; // Ініціалізація змінних
@@ -156,62 +151,64 @@ void task_9() {
 // Завдання 30: Дослідження ряду на збіжність
 
 // Функція для обчислення факторіалу
- double factorial(int n) {
-    if (n <= 1) return 1;
+double factorial(int n) {
+    if (n <= 1) return 1; // Якщо n <= 1, факторіал дорівнює 1
     double res = 1;
     for (int i = 1; i <= n; i++) {
-        res *= i;
+        res *= i; // Множимо всі числа від 1 до n
     }
     return res;
 }
 
+// Функція для обчислення ряду та перевірки на збіжність
 void task_30() {
-    double x, u, sum = 0, e = 1E-5; 
+    double x, sum = 0, u, e = 1E-05; // e - тоічність для збіжності
     int n = 1;
 
+    // Введення значення x
     cout << "Enter the value of x (real number): ";
     while (true) {
         cin >> x;
+
         if (cin.fail()) {
             cin.clear();
             cin.ignore(32767, '\n');
-            cout << "Invalid value! Try again: ";
+            cout << "Invalid input! Please enter a real number: ";
         }
         else {
-            break;
+            break; // вихід з циклу, якщо ввід коректний
         }
     }
 
     // Обчислення першого елемента ряду
     u = (pow(x, n) * factorial(n)) / pow(n, n / 2.0);
-    if (isinf(u)) {
-        cout << "First element calculation resulted in overflow.\n";
-            return;
-    }
-    sum = u;
+    sum += u;
 
-    cout << "First element of the series: u = " << u << endl;
+    // Виведення першого елемента
+    cout << "First element: " << u << endl;
 
-    // Обчислення ряду до досягнення заданої точності або максимального ліміту ітерацій
-    while (fabs(u) > e) {
-        n++;
+    // Обчислення суми ряду
+    while (fabs(u) > e && fabs(u) < 100) {
+        n++;  // Збільшуємо n для обчислення наступного елемента
         u = (pow(x, n) * factorial(n)) / pow(n, n / 2.0); // Обчислення кожного елемента ряду
-
-        if (isinf(u)) {
-            cout << "Overflow detected at element n = " << n << ". Stop calculate\n";
-            break;
-        }
         sum += u;
 
-        cout << "Current element: u = " << u << endl;
+        // Виведення поточного елемента
+        cout << "Element at n = " << n << ": " << u << endl;
 
-        // Ліміт на кількість ітерацій
-        if (n > 200) {
-            cout << "Iteration limit (200) reached. Calculation stopped.\n";
+        // Умова зупинки по розбіжності
+        if (fabs(u) > 100) {
+            cout << "Series is divergent at n = " << n << ". Stopping calculation.\n";
+            break;
+        }
+
+        // Умова зупинки по збіжності
+        if (fabs(u) < e) {
+            cout << "Series has converged at n = " << n << ". Stopping calculation.\n";
             break;
         }
     }
 
-    // Виведення результату
+    // Виведення загальної суми
     cout << "Total sum: " << sum << endl;
 }

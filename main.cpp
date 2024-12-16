@@ -162,7 +162,9 @@ double factorial(int n) {
 
 // Функція для обчислення ряду та перевірки на збіжність
 void task_30() {
-    double x, sum = 0, u, e = 1E-5; // e - тоічність для збіжності
+    double x, sum = 0, u, e = 1E-5, g = 100; 
+    // e - мала величина для переривання циклу обчислення суми 
+    // g - величина для переривання циклу обчислення суми розбіжного ряду
     int n = 1;
 
     // Введення значення x
@@ -188,7 +190,7 @@ void task_30() {
     cout << "First element: " << u << endl;
 
     // Обчислення суми ряду
-    while (fabs(u) > e && fabs(u) < 100) {
+    while (fabs(u) > e && fabs(u) < g) {
         n++;  // Збільшуємо n для обчислення наступного елемента
         u = (pow(x, n) * factorial(n)) / pow(n, n / 2.0); // Обчислення кожного елемента ряду
         sum += u;
@@ -197,7 +199,7 @@ void task_30() {
         cout << "Element at n = " << n << ": " << u << endl;
 
         // Умова зупинки по розбіжності
-        if (fabs(u) > 100) {
+        if (fabs(u) > g) {
             cout << "Series is divergent at n = " << n << ". Stopping calculation.\n";
             break;
         }
